@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	책 정보를  alert으로 출력<br>
+	
+	<div id = "message"></div>
+	
+	<script>
+		var httpRequest = null;
+		
+		function loadBooks(){
+			httpRequest = new XMLHttpRequest();
+			httpRequest.onreadystatechange = loadedBooks;
+			httpRequest.open("GET", "books.jsp", true);
+			httpRequest.send(null);
+		}
+		
+		function loadedBooks(){
+			if(httpRequest.readyState == 4){
+				if(httpRequest.status == 200){
+					var xmlDoc = httpRequest.responseXML;
+					
+					var bookList = xmlDoc.getElementsByTagName("book");
+					//var message = "책 개수 : " + bookList.length + "권\n";
+					var message = "책 개수 : " + bookList.length + "권<br>";
+					
+					
+					
+					/* var divTag = document.getElementById("message");
+					var messageText;
+					var br = document.createElement("br");
+					divTag.appendChild(document.createTextNode(message));
+					divTag.appendChild(br); */
+					
+					for( var i = 0; i < bookList.length; i++){
+						var book = bookList.item(i);
+						var title = book.getElementsByTagName("title").item(0).firstChild.nodeValue;
+						var authorValue = book.getElementsByTagName("author").item(0).firstChild.nodeValue;
+						
+						message += title+"("+ authorValue + ")<br>"; 
+						
+						
+						/* var br = document.createElement("br"); */
+						//message = title+"("+ authorValue + ")\n";
+						/* message = title+"("+ authorValue + ")<br>";
+						messageText = document.createTextNode(message);
+						
+						divTag.appendChild(messageText);
+						divTag.appendChild(br);
+						 */
+						
+					}
+					
+					/* var divMessage = document.createTextNode(message);
+					var divTag = document.getElementById("message");
+					divTag.appendChild(divMessage); */
+					
+					document.getElementById("message").innerHTML = message;
+					
+				}
+			}else{
+				console.log("httpRequest.readyState", httpRequest.readyState)
+			}
+		}
+		
+		window.onload = function(){
+			loadBooks();
+		}
+	</script>
+</body>
+</html>
